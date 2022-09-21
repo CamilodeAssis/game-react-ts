@@ -23,6 +23,48 @@ const App = () => {
     return () => clearInterval(timer);
   }, [playing, timeElapsed]);
 
+  //verify if opened are equal
+  useEffect(() => {
+    if (shownCount === 2) {
+      let opened = gridItems.filter(item => item.shown === true);
+      if (opened.length === 2) {
+        //step 1: if both are equal make every "shown"  = "permanentShown"
+        if (opened[0].item === opened[1].item) {
+          let tempGrid = [...gridItems];
+          for (let i in tempGrid) {
+            if (tempGrid[i].shown === true) {
+              tempGrid[i].permanentShown = true;
+              tempGrid[i].shown = false;
+            }
+          }
+          setGridItems(tempGrid);
+          setShownCount(0);
+        } else {
+          setTimeout(() => {
+            //step 2: if they are not equal close them
+            let tempGrid = [...gridItems];
+            for (let i in tempGrid) {
+              tempGrid[i].shown = false;
+            }
+            setGridItems(tempGrid);
+            setShownCount(0);
+          }, 1000);
+        }
+        setMoveCount(moveCount + 1);
+      }
+    }
+
+
+  }, [shownCount, gridItems]);
+
+  //verify if game over
+  useEffect(() => {
+    if (moveCount > 0 && gridItems.every(item => item.permanentShown === true)) {
+      setPlaying(false);
+    }
+
+  }, [moveCount, gridItems]);
+
   const resetAndCreateGrid = () => {
     //step 1: reset the game state
     setTimeElepsed(0);
@@ -61,7 +103,14 @@ const App = () => {
   }
 
   const handleItemClick = (index: number) => {
-
+    if (playing && index !== null && shownCount < 2) {
+      let tempGrid = [...gridItems];
+      if (tempGrid[index].permanentShown === false && tempGrid[index].shown === false) {
+        tempGrid[index].shown = true;
+        setShownCount(shownCount + 1);
+      }
+      setGridItems(tempGrid);
+    }
   }
 
   return (
@@ -70,16 +119,16 @@ const App = () => {
       {/*left info */}
       <div className="flex flex-col w-auto items-center  mb-12 md:items-start " >
         <a className="block" href="https://github.com/CamilodeAssis" target="_blank">
-          <span className="text-beigeValo">Created by Camilo de Assis</span>
+          <span className="text-beigeValo">Created by Camilo de Assis <br /> Créditos a B7Web</span>
         </a>
 
         <div className="w-full my-3 flex justify-around text-center md:block md:text-start ">
           <InfoItem label="Time" value={formatTimeElapsed(timeElapsed)} />
-          <InfoItem label="Moves" value="0" />
+          <InfoItem label="Moves" value={moveCount} />
         </div>
 
-        <Button text="Reset"  onClick={(resetAndCreateGrid)} />
-        <Button text="Pause" onClick={() => setPlaying(false)} />
+        <Button text="Reset" icon={ResetIcon} onClick={(resetAndCreateGrid)} />
+
 
       </div>
 

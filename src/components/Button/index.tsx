@@ -1,7 +1,7 @@
 type Props = {
     text: string;
     icon?: any;
-    onClick: React.MouseEventHandler<HTMLDivElement>;
+    onClick?: React.MouseEventHandler<HTMLDivElement>;
 }
 
 export const Button = ({ text, icon, onClick }: Props) => {
