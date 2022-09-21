@@ -13,6 +13,7 @@ const App = () => {
   const [moveCount, setMoveCount] = useState<number>(0);
   const [shownCount, setShownCount] = useState<number>(0);
   const [gridItems, setGridItems] = useState<GridItemType[]>([]);
+  
 
   useEffect(() => resetAndCreateGrid(), []);
 

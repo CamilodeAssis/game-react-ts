@@ -1,7 +1,7 @@
 
 type Props= {
     label: string;
-    value: string;
+    value: any;
 }
 
 export const InfoItem = ({label, value}: Props) => {
