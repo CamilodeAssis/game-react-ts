@@ -5,7 +5,7 @@ import ResetIcon from './assets/svgs/restart.svg'
 import { GridItemType } from "./types/GridItemType";
 import { GridItem } from "./components/GridItem";
 import { items } from './data/items';
-
+import { formatTimeElapsed } from "./helpers/formatTimeElapsed";
 
 const App = () => {
   const [playing, setPlaying] = useState<boolean>(false);
@@ -15,6 +15,13 @@ const App = () => {
   const [gridItems, setGridItems] = useState<GridItemType[]>([]);
 
   useEffect(() => resetAndCreateGrid(), []);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      if (playing) setTimeElepsed(timeElapsed + 1);
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [playing, timeElapsed]);
 
   const resetAndCreateGrid = () => {
     //step 1: reset the game state
@@ -54,7 +61,7 @@ const App = () => {
   }
 
   const handleItemClick = (index: number) => {
-    
+
   }
 
   return (
@@ -67,23 +74,24 @@ const App = () => {
         </a>
 
         <div className="w-full my-3 flex justify-around text-center md:block md:text-start ">
-          <InfoItem label="Time" value="00:00" />
+          <InfoItem label="Time" value={formatTimeElapsed(timeElapsed)} />
           <InfoItem label="Moves" value="0" />
         </div>
 
-        <Button text="Reset" icon={ResetIcon} onClick={resetAndCreateGrid} />
+        <Button text="Reset"  onClick={(resetAndCreateGrid)} />
+        <Button text="Pause" onClick={() => setPlaying(false)} />
 
       </div>
 
       {/*right grid */}
       <div className="flex-1 flex justify-center mx-5 md:justify-end">
-        <div className="grid grid-cols-4 gap-2.5 w-430">
+        <div className="w-430 grid grid-cols-2 gap-2.5 md:grid-cols-4  ">
           {gridItems.map((item, index) => (
-              <GridItem 
-                key={index}
-                item={item}
-                onClick={() => handleItemClick(index)}
-              />
+            <GridItem
+              key={index}
+              item={item}
+              onClick={() => handleItemClick(index)}
+            />
           ))}
         </div>
       </div>

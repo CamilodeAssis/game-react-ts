@@ -11,17 +11,17 @@ type Props = {
 export const GridItem = ({ item, onClick}: Props) => {
     
     return (
-        <div className="text-white bg-beigeValo rounded flex justify-center items-center" 
+        <div className=" bg-beigeValo rounded flex justify-center items-center h-32 " 
         
         onClick={onClick}
         >
             {item.permanentShown === false && item.shown === false &&
-                <img src={logoImg} alt="" />
+                <img src={logoImg} alt="" className=""/>
             }
 
             {(item.permanentShown || item.shown) && item.item !== null &&
                        
-                <img src={items[item.item].icon} alt="" className="h-24"/>
+                <img src={items[item.item].icon} alt="" className=" h-32 md:h-24"/>
             }
         </div>
     );
